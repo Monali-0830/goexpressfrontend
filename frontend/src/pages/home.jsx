@@ -60,6 +60,8 @@ const Home = () => {
         socket.emit('join',{ userType : "user" , userId: user._id })
     },[ user ])
 
+    
+
     const handleDestinationChange = async (e) => {
         setDestination(e.target.value)
         try {
@@ -247,7 +249,6 @@ const Home = () => {
                     destination={destination}
                     fare={fare}
                     vehicleType={vehicleType}
-
                     setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} 
                     setVehiclePanel={setVehiclePanel}/>
             </div>

@@ -8,6 +8,7 @@ import ConfirmRidePopUp from '../components/ConfirmRidePopUp';
 import { useEffect , useContext } from 'react';
 import { SocketContext } from '../context/SocketContext';
 import { CaptainDataContext } from '../context/CaptainContext';
+import axios from 'axios';
 
 
 const CaptainHome = () => {
@@ -23,7 +24,7 @@ const CaptainHome = () => {
 
   useEffect(() =>{
     socket.emit('join',{
-      userId:captain._id,
+      userId:captain.captain._id,
       userType : 'captain'
     })
 
@@ -31,13 +32,13 @@ const CaptainHome = () => {
       if (navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
 
-          console.log({userId:captain._id,
+          console.log({userId:captain.captain._id,
             location:{
             ltd:position.coords.latitude,
             lng:position.coords.longitude
             }})
           socket.emit('update-location-captain',{
-            userId:captain._id,
+            userId:captain.captain._id,
             location:{
             ltd:position.coords.latitude,
             lng:position.coords.longitude
@@ -53,6 +54,8 @@ const CaptainHome = () => {
 
   socket.on('new-ride',(data) =>{
     console.log(data)
+    setRide(data)
+    setRidePopUpPanel(true)
   })
 
 
@@ -105,8 +108,12 @@ const CaptainHome = () => {
       <div className="bg-white rounded-t-3xl shadow-lg p-6 h-1/2 flex flex-col gap-6 border-t border-gray-200">
         <CaptainDetails />
       </div>
-      <div  ref={ridePopUpPanelRef} className="fixed w-full bottom-0  bg-white p-6  rounded-t-2xl shadow-lg">
-        <RidePopUp setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
+      <div ref={ridePopUpPanelRef} className='fixed w-full z-10 bottom-0 translate-y-full ...'>
+        <RidePopUp 
+        ride={ride}
+        setRidePopUpPanel={setRidePopUpPanel}
+        setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
+        />
       </div>
       <div  ref={confirmRidePopUpPanelRef} className="fixed w-full bottom-0 h-screen  bg-white p-6  rounded-t-2xl shadow-lg">
         <ConfirmRidePopUp setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}  setRidePopUpPanel={setRidePopUpPanel}/>
